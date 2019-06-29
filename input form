@@ -1,0 +1,87 @@
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Label l = new Label();
+            l.Text = "mmmm";
+            l.Location = new Point(100, 100);
+            
+            Global.noNodes = Decimal.ToInt32(nonodes.Value);
+            Global.noEdges = Decimal.ToInt32(noedges.Value);
+            
+            Global.riri = new graph(Global.noNodes);
+           
+            int X = 50;
+            int Y = 50;
+
+            //graph riri = new graph(Global.noNodes);
+
+            for (int i = 0; i < Global.noEdges; i++)
+            {
+                
+                TextBox txt = new TextBox();
+                txt.Name = "textBox1"+i;
+                txt.Width = 40;
+                txt.Location = new Point(X, Y);
+                panel1.Controls.Add(txt);
+
+                TextBox txt1 = new TextBox();
+                txt1.Name = "textBox2"+i;
+                txt1.Width = 40;
+                txt1.Location = new Point(X + 70, Y);
+                panel1.Controls.Add(txt1);
+
+                TextBox txt2 = new TextBox();
+                txt2.Name = "textBox3" + i;
+                txt2.Width = 40;
+                txt2.Location = new Point(X + 140, Y);
+                panel1.Controls.Add(txt2);
+
+                Y = Y + 30;
+
+            }
+
+            for (int x = 0; x < Global.noNodes; x++)
+            {
+                for (int y = 0; y < Global.noNodes; y++)
+                {
+                    Global.adj[x, y] = 0;
+
+                }
+            }
+             
+            panel1.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+            for (int i = 0; i < Global.noEdges; i++)
+            {
+                int src = Convert.ToInt32(((TextBox)panel1.Controls["textBox1" + (i.ToString())]).Text);
+                int dst = Convert.ToInt32(((TextBox)panel1.Controls["textBox2" + (i.ToString())]).Text);
+                int weight = Convert.ToInt32(((TextBox)panel1.Controls["textBox3" + (i.ToString())]).Text);
+
+                Global.adj[src, dst] = 1;
+                Global.adj[dst, src] = 1;
+
+                Global.riri.add_edge(src, dst, weight);
+            }
+
+            Form2 fm = new Form2 ();
+            fm.Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.Text == "Degree Centrality")
+            {
+                string message = Convert.ToString(Global.riri.Degree_Centrality(Decimal.ToInt32(numericUpDown1.Value)));
+                MessageBox.Show(message);
+            }
+            else if (comboBox1.Text == "Closeness Centrality")
+            {
+                Global.riri.dijkstra(Decimal.ToInt32(numericUpDown1.Value));
+                string message = Convert.ToString(Global.riri.Closeness());
+                MessageBox.Show(message);
+            }
+        }
