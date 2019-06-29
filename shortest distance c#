@@ -1,0 +1,15 @@
+public int minDistance()
+        {
+            int INT_MAX = 1000000;
+            int min = INT_MAX, min_index = -1;
+
+            for (int v = 0; v < maxNodes; v++)
+            {
+                if (marks[v] == false && shortest_distance[v] <= min)
+                {
+                    min = shortest_distance[v];
+                    min_index = v;
+                }
+            }
+            return min_index;
+        }
