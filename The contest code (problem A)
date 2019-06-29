@@ -1,0 +1,222 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <algorithm>
+#include <stack>
+using namespace std;
+int numNodes;
+int numEdges;
+stack <int> path;
+#define INT_MAX 1000000
+ 
+class edge
+{
+private:
+	int d;
+	int w;
+ 
+public:
+	edge(int destination, int weight)
+	{
+		d = destination;
+		w = weight;
+	}
+ 
+	int get_destination()
+	{
+		return d;
+	}
+ 
+	int get_weight()
+	{
+		return w;
+	}
+};
+ 
+ 
+class Graph
+{
+private:
+	vector <list <edge> > edges;
+	vector <int> shortest_distance;
+	vector <bool> marks;
+public:
+ 
+	Graph()
+	{
+		numNodes = -1;
+	}
+	Graph(int Node_Number)
+	{
+		numNodes = Node_Number;
+		edges = vector < list <edge> >(numNodes);
+		shortest_distance = vector <int> (numNodes);
+		marks = vector <bool> (numNodes);
+	}
+	void get_shortest_dist()
+	{
+		vector<int>::iterator i;
+		for (i = shortest_distance.begin(); i != shortest_distance.end(); i++)
+		{
+			cout << *i << "\n";
+		}
+	}
+	void add_edge(int src, int ds, int w)
+	{
+		edge e(ds, w);
+		edge f(src, w);
+		edges[src].push_back(e);
+		edges[ds].push_back(f);
+	}
+	void Degree_Centrality(int node)
+	{
+		cout << edges[node].size() << "\n";
+	}
+	bool connect(int src , int dst)
+	{
+		list<edge > ::iterator i;
+ 
+		for (i = edges[src].begin(); i != edges[src].end(); i++)
+		{
+			if (i->get_destination() == dst)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	int weight(int src, int dst)
+	{
+		list<edge > ::iterator i;
+ 
+		for (i = edges[src].begin(); i != edges[src].end(); i++)
+		{
+			if (i->get_destination() == dst)
+			{
+				return i->get_weight() ;
+			}
+		}
+	}
+	int minDistance()
+	{
+		int min = INT_MAX, min_index;
+ 
+		for (int v = 0; v < numNodes; v++)
+			if (marks[v] == false && shortest_distance[v] <= min)
+				min = shortest_distance[v], min_index = v;
+ 
+		return min_index;
+	}
+ 
+	void dijkstra(int src)
+	{
+		
+		for (int i = 0; i < numNodes; i++)
+			shortest_distance[i] = INT_MAX, marks[i] = false;
+ 
+		shortest_distance[src] = 0;
+ 
+		for (int count = 0; count < numNodes- 1; count++)
+		{
+			
+			int u = minDistance();
+			marks[u] = true;
+ 
+			for (int v = 0; v < numNodes; v++)
+ 
+				
+				if (!marks[v] && connect(u, v) && shortest_distance[u] != INT_MAX
+					&& shortest_distance[u] + weight(u,v)< shortest_distance[v])
+					shortest_distance[v] = shortest_distance[u] + weight(u, v);
+		}
+	}
+	int minDistance_betweeness()
+	{
+		int min = INT_MAX, min_index;
+ 
+		for (int v = 0; v < numNodes; v++)
+			if (marks[v] == false && shortest_distance[v] <= min)
+				min = shortest_distance[v], min_index = v, path.push(v);
+ 
+		return min_index;
+	}
+ 
+    void Closeness()
+	{
+		float sum = 0;
+		vector<int>::iterator i;
+		for (i = shortest_distance.begin(); i != shortest_distance.end(); i++)
+		{
+			sum = sum + *i;
+		}
+		cout<<( (numNodes - 1) /sum) <<"\n" ;
+	}
+ 
+	void d(int src)
+	{
+		
+		vector <bool> m (numNodes);
+		for (int i = 0; i < numNodes; i++)
+			shortest_distance[i] = INT_MAX, marks[i] = false, m[i] = false;
+ 
+		shortest_distance[src] = 0;
+		
+		for (int count = 0; count < numNodes- 1; count++)
+		{
+			int u = minDistance_betweeness();
+			marks[u] = true;
+			path.push(u);
+ 
+			for (int v = 0; v < numNodes; v++)
+			{
+				if (!marks[v] && connect(u, v) && shortest_distance[u] != INT_MAX
+					&& shortest_distance[u] + weight(u,v)< shortest_distance[v])
+				{
+					shortest_distance[v] = shortest_distance[u] + weight(u, v);
+					path.push(v);
+ 
+					/*
+					for(int k=v+1;k<numNodes;k++)
+					{
+						if(!marks[k] && connect(u, k) && shortest_distance[u] != INT_MAX
+					            && shortest_distance[u]-  weight(u, v)+ weight(u,k)== shortest_distance[v])
+				    {
+					  m[v] = true;
+					  path.push(u);
+					  break;
+					}
+					
+					}
+					*/
+				}
+				
+			}
+		}
+	}
+	
+};
+ 
+ 
+ 
+int main()
+{
+	cin >> numNodes;
+	Graph R(numNodes);
+	cin >> numEdges;
+	for (int i = 0; i < numEdges; i++)
+	{
+		int source_node, destination_node, weight_value;
+		cin >> source_node >> destination_node >> weight_value;
+		R.add_edge(source_node, destination_node, weight_value);
+	}
+ 
+	for (int i = 0; i < numNodes; i++)
+	{
+		R.Degree_Centrality(i);
+		//R.dijkstra(i);
+		//R.Closeness();
+	}
+ 
+	//system("pause");
+	return 0;
+}
