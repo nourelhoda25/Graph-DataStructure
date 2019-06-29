@@ -1,0 +1,4 @@
+public int Degree_Centrality(int node)
+{
+    return edges[node].Count;
+}
