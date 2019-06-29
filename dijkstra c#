@@ -1,0 +1,25 @@
+        public void dijkstra(int src)
+        {
+            int INT_MAX = 1000000;
+            for (int i = 0; i < maxNodes; i++)
+            {
+                shortest_distance[i] = INT_MAX; 
+                marks[i] = false;
+            }
+            shortest_distance[src] = 0;
+
+
+            for (int count = 0; count < maxNodes - 1; count++)
+            {
+
+                int u = minDistance();
+                marks[u] = true;
+
+                for (int v = 0; v < maxNodes; v++)
+
+
+                    if (!marks[v] && connect(u, v) && shortest_distance[u] != INT_MAX
+                        && shortest_distance[u] + weight(u, v) < shortest_distance[v])
+                        shortest_distance[v] = shortest_distance[u] + weight(u, v);
+            }
+        }
