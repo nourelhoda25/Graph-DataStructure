@@ -1,0 +1,10 @@
+public float Closeness()
+{
+    float sum = 0;
+    for (int i = 0; i < shortest_distance.Count; i++)
+    {
+        sum = sum + shortest_distance[i];
+    }
+    
+    return ( (maxNodes - 1) /sum); 
+}
