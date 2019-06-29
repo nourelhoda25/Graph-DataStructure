@@ -1,0 +1,153 @@
+sing System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CirclesYaDoniaCircles
+{
+    public partial class Form2 : Form
+    {
+         public void generate_random_circles(int num_of_nodes)
+        {
+            int pX, pY;
+            Random rand = new Random();
+            //int n = rand.Next(0, 1001);
+            for (int j = 0; j < num_of_nodes; j++)
+            {
+                pX = rand.Next(0, 800);
+                pY = rand.Next(0, 500);
+
+                points[j, 0] = pX;
+                points[j, 1] = pY;
+
+                if (degree[j] < 0.25)
+                    diameter = 20;
+                else if (degree[j] < 0.5)
+                    diameter = 30;
+                else if (degree[j] < 0.75)
+                    diameter = 40;
+                else if (degree[j] < 1)
+                    diameter = 50;      
+
+                X_center[j] = (pX + (diameter / 2));
+                Y_center[j] = (pY + (diameter / 2));
+
+            }
+        }
+
+        int[,] points = new int[100, 2];
+        int[] X_center = new int[100];
+        int[] Y_center = new int[100];
+        int diameter ;
+        float[] degree = new float [100];
+
+        void degresss()
+        {
+            float cnt = 0;
+            for (int i = 0; i < Global.noNodes; i++)
+            {
+                cnt = 0;
+                for (int j = 0; j < Global.noNodes; j++)
+                {
+                    if (Global.adj[i,j] == 1)
+                        cnt++;
+                }
+                degree[i] = (cnt/ Global.noNodes);
+                
+            }
+        
+        
+        }
+
+        public Form2()
+        {
+            InitializeComponent();
+            generate_random_circles(Global.noNodes);
+            degresss();
+
+           
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
+
+       
+        public int x_center(int x, int width)
+        {
+            return (x + (width / 2));
+        }
+
+        public int y_center(int y, int height)
+        {
+            return (y + (height / 2));
+        }
+
+
+
+        private void Form2_Paint(object sender, PaintEventArgs e)
+        {
+            
+            Graphics m = e.Graphics;
+            Pen pens = new Pen(Color.Red);
+            Graphics r = e.Graphics;
+            Pen p = new Pen(Color.Black);
+
+            for (int i = 0; i < Global.noNodes; i++)
+            {
+
+                Graphics g = e.Graphics;
+                SolidBrush brush = new SolidBrush(Color.Red);
+                // g.DrawEllipse(pen, x, y, 20, 20);
+                if (degree[i] < 0.25)
+                    diameter = 20;
+                else if (degree[i] < 0.5)
+                    diameter = 30;
+                else if (degree[i] < 0.75)
+                    diameter = 40;
+                else if (degree[i] < 1)
+                    diameter = 50;      
+
+                g.FillEllipse(brush, points[i, 0], points[i, 1], diameter , diameter);
+
+                Label l = new Label();
+                l.Text = i.ToString();
+                l.Width = 15;
+                l.Location = new Point(X_center[i], Y_center[i]);
+                l.BackColor = System.Drawing.Color.Transparent;
+               
+                Controls.Add(l);
+
+                // int center_X = x_center(points[i, 0], 20);
+                //int center_Y = y_center(points[i, 1], 20);
+                //i++;
+                //g.FillEllipse(brush, points[i, 0], points[i, 1], 20, 20);
+                //int center_X2 = x_center(points[i, 0], 20);
+                //int center_Y2 = y_center(points[i, 1], 20);
+                //i--;
+                //r.DrawArc(p, x , y , x + 30, y + 40, 0, 45)
+            }
+            for (int j = 0; j < Global.noEdges; j++)
+            {
+                for (int k = 0; k < Global.noNodes; k++)
+                {
+                    for (int n = 0; n < Global.noNodes; n++)
+                    {
+                        if (Global.adj[k, n] == 1)
+                        {
+                            r.DrawLine(p, X_center[k], Y_center[k], X_center[n], Y_center[n]);
+
+                        }
+                    }
+                }
+            }
+            return;
+        }
+    }
+}
