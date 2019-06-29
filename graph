@@ -1,0 +1,30 @@
+    public class graph
+    {
+        private
+        int maxNodes;
+        List<List<edge>> edges = new List<List<edge>>();
+        List<int> shortest_distance = new List<int>();
+        List<bool> marks = new List<bool>();
+            
+        public graph(int numNodes)
+        {
+            maxNodes = numNodes;
+            edges = new List<List<edge>>();
+            for (int k = 0; k < numNodes; k++)
+            {
+                List<edge> L=new List<edge>();
+                edges.Add(L);
+                shortest_distance.Add(-1);
+                marks.Add(false);
+            }
+
+        }
+        
+        public void add_edge(int src, int ds, int w)
+        {
+            edge e = new edge(ds, w);
+            edges[src].Add(e);
+            edge f = new edge(src, w);
+            edges[ds].Add(f);
+        }
+    }
